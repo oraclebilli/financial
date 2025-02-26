@@ -1,0 +1,7 @@
+steps: 
+- name: 'gcr.io/cloud-builders/docker' 
+"  args: ['build', '-t', 'gcr.io/financial-analysis-451907/financial-analysis', '.']" 
+- name: 'gcr.io/cloud-builders/docker' 
+"  args: ['push', 'gcr.io/financial-analysis-451907/financial-analysis']" 
+- name: 'gcr.io/cloud-builders/gcloud' 
+"  args: ['run', 'deploy', 'financial-analysis-app', '--image', 'gcr.io/financial-analysis-451907/financial-analysis', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']" 
