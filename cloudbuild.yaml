@@ -1,39 +1,11 @@
 steps:
-  # 1️⃣ Docker 이미지를 빌드한다.
   - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'build'
-      - '-t'
-      - 'gcr.io/financial-analysis-451907/financial-analysis'
-      - '.'
-
-  # 2️⃣ 빌드된 이미지를 GCR/GAR에 푸시한다.
+    args: ['build', '-t', 'gcr.io/financial-analysis-451907/financial-analysis', '.']
   - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'push'
-      - 'gcr.io/financial-analysis-451907/financial-analysis'
-
-  # 3️⃣ Cloud Run에 배포한다.
+    args: ['push', 'gcr.io/financial-analysis-451907/financial-analysis']
   - name: 'gcr.io/cloud-builders/gcloud'
-    args:
-      - 'run'
-      - 'deploy'
-      - 'financial-analysis-app'
-      - '--image'
-      - 'gcr.io/financial-analysis-451907/financial-analysis'
-      - '--platform'
-      - 'managed'
-      - '--region'
-      - 'us-central1'
-      - '--allow-unauthenticated'
-
-  # 4️⃣ 빌드 로그를 버킷에 저장한다.
-  - name: 'gcr.io/cloud-builders/gsutil'
-    args:
-      - 'cp'
-      - 'build.log'
-      - '${_LOGS_BUCKET}/build.log'
-
+    args: ['run', 'deploy', 'financial-analysis-app', '--image', 'gcr.io/financial-analysis-451907/financial-analysis', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+logsBucket: ${_LOGS_BUCKET}
+serviceAccount: 'projects/financial-analysis-451907/serviceAccounts/cloudbuild-sa@financial-analysis-451907.iam.gserviceaccount.com'
 substitutions:
   _LOGS_BUCKET: gs://financial-analysis-logs
-
