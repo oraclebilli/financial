@@ -1,0 +1,30 @@
+name: 테스트 돌리기
+
+on:
+  push:
+    branches:
+      - test  # test 폴더에서만 돌려
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # 깃허브에서 쓰는 컴퓨터
+
+    steps:
+      - name: 코드 가져오기
+        uses: actions/checkout@v4
+
+      - name: 파이썬 준비
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'  # 네가 쓰는 파이썬 버전 (모르면 3.9로 해도 돼)
+
+      - name: 필요한 프로그램 설치
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 테스트 실행
+        run: python main.py
+        env:
+          TEST_MODE: true  # 테스트 모드 켜기
+          STORAGE_BUCKET: test-bucket  # financial-test-data-2025(네 테스트 버킷 이름으로 바꿔)
